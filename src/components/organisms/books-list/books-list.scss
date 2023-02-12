@@ -1,0 +1,26 @@
+.books-table-container {
+  width: 100%;
+  margin-top: 32px;
+  display: grid;
+  row-gap: 24px;
+  padding-bottom: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(194px, 195px));
+  justify-content: space-between;
+}
+.books-list-container {
+  width: 100%;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 18px;
+  padding-bottom: 14px;
+}
+
+@media screen and (max-width: 620px) {
+  .books-table-container {
+    margin-top: 16px;
+    row-gap: 16px;
+    padding-bottom: 0px;
+    grid-template-columns: 1fr;
+  }
+}

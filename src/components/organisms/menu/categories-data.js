@@ -1,0 +1,86 @@
+export const categoriesData = [
+  {
+    id: '1',
+    category: 'business',
+    name: 'Бизнес-книги',
+    amount: 14,
+  },
+  {
+    id: '2',
+    category: 'detective',
+    name: 'Детективы',
+    amount: 8,
+  },
+  {
+    id: '3',
+    category: 'children',
+    name: 'Детские книги',
+    amount: 14,
+  },
+  {
+    id: '4',
+    category: 'foreign',
+    name: 'Зарубежная литература',
+    amount: 2,
+  },
+  {
+    id: '5',
+    category: 'history',
+    name: 'История',
+    amount: 14,
+  },
+  {
+    id: '6',
+    category: 'classic',
+    name: 'Классическая литература',
+    amount: 12,
+  },
+  {
+    id: '7',
+    category: 'psychology',
+    name: 'Книги по психологии',
+    amount: 11,
+  },
+  {
+    id: '8',
+    category: 'computer',
+    name: 'Компьютерная литература',
+    amount: 54,
+  },
+  {
+    id: '9',
+    category: 'culture',
+    name: 'Культура и искусство',
+    amount: 5,
+  },
+  {
+    id: '10',
+    category: 'science',
+    name: 'Наука и образование',
+    amount: 2,
+  },
+  {
+    id: '11',
+    category: 'publicistic',
+    name: 'Публицистическая литература',
+    amount: 0,
+  },
+  {
+    id: '12',
+    category: 'reference',
+    name: 'Справочники',
+    amount: 10,
+  },
+  {
+    id: '13',
+    category: 'fantasy',
+    name: 'Фантастика',
+    amount: 12,
+  },
+  {
+    id: '14',
+    category: 'comedy',
+    name: 'Юмористическая литература',
+    amount: 8,
+  },
+];
