@@ -18,4 +18,10 @@ button.common-button {
     color: #a7a7a7;
     cursor: not-allowed;
   }
+
+  &.booked {
+    background: #ffffff;
+    border: 1px solid #bfc4c9;
+    color: #363636;
+  }
 }

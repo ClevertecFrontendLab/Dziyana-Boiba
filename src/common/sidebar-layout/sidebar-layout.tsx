@@ -1,7 +1,9 @@
 import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
+
 import { Menu } from '../../components/organisms/menu';
 import { MenuContext } from '../../store/menu-context';
+
 import './sidebar-layout.scss';
 
 export const SidebarLayout = () => {
@@ -15,6 +17,7 @@ export const SidebarLayout = () => {
       sidebar.setOpen();
     }
   };
+
   return (
     <section className='sidebar-layout'>
       {sidebar.isOpen && (

@@ -1,14 +1,15 @@
 import { ReactComponent as StarIcon } from '../../../assets/images/Icon_star.svg';
 import { ReactComponent as StarEmptyIcon } from '../../../assets/images/Icon_star-empty.svg';
+
 import './rating-bar.scss';
 
 type Props = {
-  rating: number;
+  rating: number | null;
 };
 
 export const RatingBar = ({ rating }: Props) => (
   <div className='rating-bar'>
-    {rating > 0 ? (
+    {rating ? (
       <div>
         <StarIcon />
         {rating > 1 ? <StarIcon /> : <StarEmptyIcon />}

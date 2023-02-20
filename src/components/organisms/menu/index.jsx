@@ -1,14 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { MenuContext } from '../../../store/menu-context.js';
+import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+
 import { ReactComponent as IconChevronDown } from '../../../assets/images/Icon_Chevron_Down.svg';
-import { categoriesData } from './categories-data.js';
+import { MenuContext } from '../../../store/menu-context.js';
+
 import './menu.scss';
 
 export const Menu = () => {
   const sidebar = useContext(MenuContext);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const url = useLocation().pathname;
+  const categoriesData = useSelector((state) => state.categories);
+  const booksListData = useSelector((state) => state.books);
 
   useEffect(() => {
     if (sidebar.isOpen) {
@@ -45,32 +48,36 @@ export const Menu = () => {
               className={({ isActive }) => (isActive ? 'main-menu_link active' : 'main-menu_link')}
             >
               Витрина книг
-              <IconChevronDown className={isMenuOpen ? 'main-menu_link_svg open' : 'main-menu_link_svg'} />
+              {!categoriesData.error && !booksListData.error && (
+                <IconChevronDown className={isMenuOpen ? 'main-menu_link_svg open' : 'main-menu_link_svg'} />
+              )}
             </NavLink>
-
-            <ul className={isMenuOpen ? 'categories open' : 'categories'}>
-              <li>
-                <NavLink
-                  to='books/all'
-                  data-test-id={windowMobile ? 'burger-books' : 'navigation-books'}
-                  onClick={closeSidebarHandler}
-                  className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                  Все книги
-                </NavLink>
-              </li>
-              {categoriesData.map((category) => (
-                <li key={category.id}>
+            {!categoriesData.error && !booksListData.error && (
+              <ul className={isMenuOpen ? 'categories open' : 'categories'}>
+                <li>
                   <NavLink
-                    to={`/books/${category.category}`}
+                    to='books/all'
+                    data-test-id={windowMobile ? 'burger-books' : 'navigation-books'}
                     onClick={closeSidebarHandler}
                     className={({ isActive }) => (isActive ? 'active' : '')}
                   >
-                    {category.name} <span>{category.amount}</span>
+                    Все книги
                   </NavLink>
                 </li>
-              ))}
-            </ul>
+                {categoriesData.data &&
+                  categoriesData.data.map((category) => (
+                    <li key={`category${category.id}`}>
+                      <NavLink
+                        to={`/books/${category.path}`}
+                        onClick={closeSidebarHandler}
+                        className={({ isActive }) => (isActive ? 'active' : '')}
+                      >
+                        {category.name} <span>{category.amount}</span>
+                      </NavLink>
+                    </li>
+                  ))}
+              </ul>
+            )}
           </li>
           <li>
             <NavLink

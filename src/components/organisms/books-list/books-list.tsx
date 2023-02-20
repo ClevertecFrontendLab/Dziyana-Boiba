@@ -1,38 +1,86 @@
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import { RootState } from '../../../redux';
+
 import { BookCard } from './book-card';
-import BooksData from '../../../assets/books-data.json';
+
 import './books-list.scss';
 
 type Props = {
   isListView: boolean;
 };
 
+type CategoryObj = {
+  name: string;
+  path: string;
+  id: number;
+};
+
 type BookObj = {
-  id: string;
-  image: string[];
-  category: string;
-  author: string;
+  issueYear: string | null;
+  rating: number | null;
   title: string;
-  rating: number;
-  year: number;
-  isBooked: boolean;
-  bookedTill: string;
+  authors: string[] | null;
+  image: {
+    url: string;
+  } | null;
+  categories: string[] | null;
+  id: number;
+  booking: {
+    id: number;
+    order: boolean;
+    dateOrder: string | null;
+    customerId: number | null;
+    customerFirstName: string | null;
+    customerLastName: string | null;
+  } | null;
+  delivery: {
+    id: number;
+    handed: boolean;
+    dateHandedFrom: string | null;
+    dateHandedTo: string | null;
+    recipientId: number | null;
+    recipientFirstName: string | null;
+    recipientLastName: string | null;
+  } | null;
+  histories: Array<{
+    id: number | null;
+    userId: number | null;
+  }> | null;
 };
 
 export const BooksList = ({ isListView }: Props) => {
-  const booksObj: Record<string, BookObj[]> = BooksData;
   const { category } = useParams<{ category?: string }>();
-  const books = booksObj[category as keyof object];
   const navigate = useNavigate();
-  const openBook = (id: string) => {
+
+  const booksList = useSelector((state: RootState) => state.books);
+  const categories = useSelector((state: RootState) => state.categories);
+
+  const openBook = (id: number) => {
     navigate(`${id}`);
   };
 
+  let currentCategory: CategoryObj;
+
+  if (categories.data && category !== 'all') {
+    currentCategory = categories.data.find((item: CategoryObj) => item.path === category);
+  }
+
+  let currentBooksList = booksList.data;
+
+  if (booksList.data && category !== 'all') {
+    currentBooksList = booksList.data.filter(
+      (item: BookObj) => item.categories && item.categories.includes(currentCategory.name)
+    );
+  }
+
   return (
     <div className={isListView ? 'books-list-container' : 'books-table-container'}>
-      {books.map((book: any) => (
-        <BookCard book={book} isListView={isListView} onClick={openBook} key={book.id} />
-      ))}
+      {currentBooksList &&
+        currentBooksList.map((book: BookObj) => (
+          <BookCard book={book} isListView={isListView} onClick={openBook} key={book.id} />
+        ))}
     </div>
   );
 };
