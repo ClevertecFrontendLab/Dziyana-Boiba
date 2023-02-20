@@ -57,7 +57,7 @@ export const BookSwiper = ({ images }: Props) => {
             data-test-id={windowMobile ? 'slide-big' : ''}
             className='swiper-mobile'
           >
-            {images.map((img: object) => (
+            {images.map((img: ImgObj) => (
               <SwiperSlide>
                 <img src={`https://strapi.cleverland.by${img.url}`} alt='The page of the book' />
               </SwiperSlide>
@@ -80,7 +80,7 @@ export const BookSwiper = ({ images }: Props) => {
             className='swiper-bottom'
           >
             {images.length > 0 &&
-              images.map((img: object) => (
+              images.map((img: ImgObj) => (
                 <SwiperSlide data-test-id='slide-mini'>
                   <img src={`https://strapi.cleverland.by${img.url}`} alt='The page of the book' />
                 </SwiperSlide>
