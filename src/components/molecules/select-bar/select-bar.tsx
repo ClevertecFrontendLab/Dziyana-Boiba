@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { ReactComponent as SearchIcon } from '../../../assets/images/Icon_Search.svg';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { ReactComponent as CloseIcon } from '../../../assets/images/Icon_Close.svg';
-import { ReactComponent as RatingIcon } from '../../../assets/images/Icon_rating.svg';
-import { ReactComponent as TableIcon } from '../../../assets/images/Icon_table.svg';
 import { ReactComponent as ListIcon } from '../../../assets/images/Icon_List.svg';
+import { ReactComponent as RatingIcon } from '../../../assets/images/Icon_rating.svg';
+import { ReactComponent as SearchIcon } from '../../../assets/images/Icon_Search.svg';
+import { ReactComponent as TableIcon } from '../../../assets/images/Icon_table.svg';
+import { RootState } from '../../../redux';
+import { SET_FILTER } from '../../../redux/reducers/app-state/actions';
+
 import './select-bar.scss';
 
 type Props = {
@@ -13,12 +18,19 @@ type Props = {
 
 export const SelectBar = ({ selectView, isListView }: Props) => {
   const [isInputOpen, setIsInputOpen] = useState(false);
+  const dispatch = useDispatch();
+  const filter = useSelector((state: RootState) => state.appState.ratingDown);
   const openInputHandler = () => {
     setIsInputOpen(true);
   };
   const closeInputHandler = () => {
     setIsInputOpen(false);
   };
+
+  const setFilterHandler = () => {
+    dispatch({ type: SET_FILTER });
+  };
+
   return (
     <div className='select-bar'>
       <div className='select-bar_left'>
@@ -27,8 +39,8 @@ export const SelectBar = ({ selectView, isListView }: Props) => {
           <input type='text' data-test-id='input-search' placeholder='Поиск книги или автора…' />
           <CloseIcon className='close-icon' onClick={closeInputHandler} data-test-id='button-search-close' />
         </div>
-        <button type='button' className='rating-btn'>
-          <RatingIcon />
+        <button type='button' onClick={setFilterHandler} className='rating-btn'>
+          <RatingIcon className={filter ? '' : 'rating-up'} />
           <span>По рейтингу</span>
         </button>
       </div>

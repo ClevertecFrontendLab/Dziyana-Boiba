@@ -70,12 +70,14 @@ export const BookCard = ({ book, isListView, onClick }: Props) => {
       </div>
       <div className='card-container_content'>
         {!isListView && <RatingBar rating={book.rating} />}
-        <div className='description-overflow-container'>
+        <div className='title-overflow-container'>
           <p>{book.title}</p>
         </div>
-        <div className='author'>
-          {book.authors && book.authors.map((author) => `${author}, `)}
-          {book.issueYear}
+        <div className='author-overflow-container'>
+          <p>
+            {book.authors && book.authors.map((author) => `${author}, `)}
+            {book.issueYear}
+          </p>
         </div>
         <div className='card-footer'>
           {isListView && <RatingBar rating={book.rating} />}

@@ -3,15 +3,55 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import { ReactComponent as IconChevronDown } from '../../../assets/images/Icon_Chevron_Down.svg';
+import { RootState } from '../../../redux';
 import { MenuContext } from '../../../store/menu-context.js';
 
 import './menu.scss';
 
+type CategoryObj = {
+  name: string;
+  path: string;
+  id: number;
+};
+
+type BookObj = {
+  issueYear: string | null;
+  rating: number | null;
+  title: string;
+  authors: string[] | null;
+  image: {
+    url: string;
+  } | null;
+  categories: string[] | null;
+  id: number;
+  booking: {
+    id: number;
+    order: boolean;
+    dateOrder: string | null;
+    customerId: number | null;
+    customerFirstName: string | null;
+    customerLastName: string | null;
+  } | null;
+  delivery: {
+    id: number;
+    handed: boolean;
+    dateHandedFrom: string | null;
+    dateHandedTo: string | null;
+    recipientId: number | null;
+    recipientFirstName: string | null;
+    recipientLastName: string | null;
+  } | null;
+  histories: Array<{
+    id: number | null;
+    userId: number | null;
+  }> | null;
+};
+
 export const Menu = () => {
   const sidebar = useContext(MenuContext);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const categoriesData = useSelector((state) => state.categories);
-  const booksListData = useSelector((state) => state.books);
+  const categoriesData = useSelector((state: RootState) => state.categories);
+  const booksListData = useSelector((state: RootState) => state.books);
 
   useEffect(() => {
     if (sidebar.isOpen) {
@@ -35,6 +75,16 @@ export const Menu = () => {
     }
   };
   const windowMobile = window.innerWidth < 960 ? true : false;
+
+  const amountOfBooks = (category: string) => {
+    if (booksListData.data) {
+      const booksList = booksListData.data.filter(
+        (item: BookObj) => item.categories && item.categories.includes(category)
+      );
+
+      return booksList.length;
+    }
+  };
 
   return (
     <div data-test-id='burger-navigation' className={sidebar.isOpen ? 'menu-container open' : 'menu-container'}>
@@ -65,14 +115,14 @@ export const Menu = () => {
                   </NavLink>
                 </li>
                 {categoriesData.data &&
-                  categoriesData.data.map((category) => (
+                  categoriesData.data.map((category: CategoryObj) => (
                     <li key={`category${category.id}`}>
                       <NavLink
                         to={`/books/${category.path}`}
                         onClick={closeSidebarHandler}
                         className={({ isActive }) => (isActive ? 'active' : '')}
                       >
-                        {category.name} <span>{category.amount}</span>
+                        {category.name} <span>{amountOfBooks(category.name)}</span>
                       </NavLink>
                     </li>
                   ))}
