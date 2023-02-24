@@ -84,7 +84,7 @@ export const Menu = () => {
       booksList = booksListData.data.filter((item: BookObj) => item.categories && item.categories.includes(category));
     }
 
-    return booksList.length;
+    return booksList?.length;
   };
 
   return (
@@ -124,17 +124,17 @@ export const Menu = () => {
                         className={({ isActive }) => (isActive ? 'active' : '')}
                         data-test-id={windowMobile ? `burger-${category.path}` : `navigation-${category.path}`}
                       >
-                        {category.name}{' '}
-                        <span
-                          data-test-id={
-                            windowMobile
-                              ? `burger-book-count-for-${category.path}`
-                              : `navigation-book-count-for-${category.path}`
-                          }
-                        >
-                          {amountOfBooks(category.name)}
-                        </span>
+                        {category.name}
                       </NavLink>
+                      <span
+                        data-test-id={
+                          windowMobile
+                            ? `burger-book-count-for-${category.path}`
+                            : `navigation-book-count-for-${category.path}`
+                        }
+                      >
+                        {amountOfBooks(category.name)}
+                      </span>
                     </li>
                   ))}
               </ul>
