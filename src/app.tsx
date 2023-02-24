@@ -9,7 +9,6 @@ import { MainPage } from './pages/main';
 import { Contract } from './pages/terms/contract';
 import { Terms } from './pages/terms/terms';
 import { LOAD_CATEGORIES } from './redux/reducers/categories/actions';
-import { MenuContextProvider } from './store/menu-context';
 import { AppDispatch } from './redux';
 
 import './index.css';
@@ -31,21 +30,19 @@ export const App = () => {
   }, [dispatch]);
 
   return (
-    <MenuContextProvider>
-      <HashRouter>
-        <Routes>
-          <Route path='/' element={<Layout />}>
-            <Route element={<SidebarLayout />}>
-              <Route path='/' element={<Navigate to='books/all' />} />
-              <Route path='/books' element={<Navigate to='all' />} />
-              <Route path='books/:category' element={<MainPage />} />
-              <Route path='terms' element={<Terms />} />
-              <Route path='contract' element={<Contract />} />
-            </Route>
-            <Route path='books/:category/:bookid' element={<BookPage />} />
+    <HashRouter>
+      <Routes>
+        <Route path='/' element={<Layout />}>
+          <Route element={<SidebarLayout />}>
+            <Route path='/' element={<Navigate to='books/all' />} />
+            <Route path='/books' element={<Navigate to='all' />} />
+            <Route path='books/:category' element={<MainPage />} />
+            <Route path='terms' element={<Terms />} />
+            <Route path='contract' element={<Contract />} />
           </Route>
-        </Routes>
-      </HashRouter>
-    </MenuContextProvider>
+          <Route path='books/:category/:bookid' element={<BookPage />} />
+        </Route>
+      </Routes>
+    </HashRouter>
   );
 };

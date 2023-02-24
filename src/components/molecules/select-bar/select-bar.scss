@@ -16,6 +16,11 @@
       align-items: center;
       padding: 0 16px;
       margin-right: 16px;
+      &:focus-within svg {
+        path {
+          fill: rgb(248, 54, 0) !important;
+        }
+      }
 
       input {
         height: 38px;
@@ -25,6 +30,7 @@
         width: 100%;
         margin-left: 8px;
         color: #a7a7a7;
+        caret-color: rgb(248, 54, 0);
         &:focus {
           outline: none;
         }
@@ -48,6 +54,13 @@
       border: none;
       white-space: nowrap;
       margin-right: 16px;
+      cursor: pointer;
+      &:hover {
+        box-shadow: 0px 3px 4px rgba(222, 125, 11, 0.2), 0px 1px 10px rgba(249, 89, 8, 0.2);
+      }
+      .rating-up {
+        transform: scaleY(-1);
+      }
     }
   }
 
@@ -65,6 +78,7 @@
       justify-content: center;
       align-items: center;
       background: #ffffff;
+      cursor: pointer;
       svg {
         fill: #a7a7a7;
       }
@@ -123,7 +137,7 @@
             margin-left: 0px;
             margin-right: 8px;
             height: 32px;
-            caret-color: #f83600;
+            caret-color: rgb(248, 54, 0);
           }
         }
       }

@@ -53,9 +53,11 @@ type BookObj = {
 export const BooksList = ({ isListView }: Props) => {
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
+  const search = useSelector((state: RootState) => state.appState.search);
 
   const booksList = useSelector((state: RootState) => state.books);
   const categories = useSelector((state: RootState) => state.categories);
+  const filter = useSelector((state: RootState) => state.appState.ratingDown);
 
   const openBook = (id: number) => {
     navigate(`${id}`);
@@ -72,6 +74,32 @@ export const BooksList = ({ isListView }: Props) => {
   if (booksList.data && category !== 'all') {
     currentBooksList = booksList.data.filter(
       (item: BookObj) => item.categories && item.categories.includes(currentCategory.name)
+    );
+  }
+
+  if (search && booksList.data) {
+    currentBooksList = currentBooksList.filter((item: BookObj) =>
+      item.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    );
+  }
+
+  if (booksList.data) {
+    currentBooksList.sort((a: BookObj, b: BookObj) =>
+      filter
+        ? (b.rating ? b.rating : 0) - (a.rating ? a.rating : 0)
+        : (a.rating ? a.rating : 0) - (b.rating ? b.rating : 0)
+    );
+  }
+
+  if (currentBooksList && currentBooksList.length === 0) {
+    return search ? (
+      <div className='no-books' data-test-id='search-result-not-found'>
+        По запросу ничего не найдено
+      </div>
+    ) : (
+      <div className='no-books' data-test-id='empty-category'>
+        В этой категории книг ещё нет
+      </div>
     );
   }
 

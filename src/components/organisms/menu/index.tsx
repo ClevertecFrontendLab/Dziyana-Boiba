@@ -1,25 +1,66 @@
-import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import { ReactComponent as IconChevronDown } from '../../../assets/images/Icon_Chevron_Down.svg';
-import { MenuContext } from '../../../store/menu-context.js';
+import { RootState } from '../../../redux';
+import { SET_BURGER_OPEN } from '../../../redux/reducers/app-state/actions';
 
 import './menu.scss';
 
+type CategoryObj = {
+  name: string;
+  path: string;
+  id: number;
+};
+
+type BookObj = {
+  issueYear: string | null;
+  rating: number | null;
+  title: string;
+  authors: string[] | null;
+  image: {
+    url: string;
+  } | null;
+  categories: string[] | null;
+  id: number;
+  booking: {
+    id: number;
+    order: boolean;
+    dateOrder: string | null;
+    customerId: number | null;
+    customerFirstName: string | null;
+    customerLastName: string | null;
+  } | null;
+  delivery: {
+    id: number;
+    handed: boolean;
+    dateHandedFrom: string | null;
+    dateHandedTo: string | null;
+    recipientId: number | null;
+    recipientFirstName: string | null;
+    recipientLastName: string | null;
+  } | null;
+  histories: Array<{
+    id: number | null;
+    userId: number | null;
+  }> | null;
+};
+
 export const Menu = () => {
-  const sidebar = useContext(MenuContext);
+  const dispatch = useDispatch();
+  const isBurgerOpen = useSelector((state: RootState) => state.appState.isBurgerOpen);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const categoriesData = useSelector((state) => state.categories);
-  const booksListData = useSelector((state) => state.books);
+  const categoriesData = useSelector((state: RootState) => state.categories);
+  const booksListData = useSelector((state: RootState) => state.books);
 
   useEffect(() => {
-    if (sidebar.isOpen) {
+    if (isBurgerOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
-  }, [sidebar.isOpen]);
+  }, [isBurgerOpen]);
 
   const openMenuHandler = () => {
     setIsMenuOpen((prevState) => !prevState);
@@ -30,14 +71,24 @@ export const Menu = () => {
     }
   };
   const closeSidebarHandler = () => {
-    if (sidebar.isOpen) {
-      sidebar.setOpen();
+    if (isBurgerOpen) {
+      dispatch({ type: SET_BURGER_OPEN });
     }
   };
   const windowMobile = window.innerWidth < 960 ? true : false;
 
+  const amountOfBooks = (category: string) => {
+    let booksList;
+
+    if (booksListData.data) {
+      booksList = booksListData.data.filter((item: BookObj) => item.categories && item.categories.includes(category));
+    }
+
+    return booksList?.length;
+  };
+
   return (
-    <div data-test-id='burger-navigation' className={sidebar.isOpen ? 'menu-container open' : 'menu-container'}>
+    <div data-test-id='burger-navigation' className={isBurgerOpen ? 'menu-container open' : 'menu-container'}>
       <nav>
         <ul className='main-menu'>
           <li>
@@ -65,15 +116,25 @@ export const Menu = () => {
                   </NavLink>
                 </li>
                 {categoriesData.data &&
-                  categoriesData.data.map((category) => (
+                  categoriesData.data.map((category: CategoryObj) => (
                     <li key={`category${category.id}`}>
                       <NavLink
                         to={`/books/${category.path}`}
                         onClick={closeSidebarHandler}
                         className={({ isActive }) => (isActive ? 'active' : '')}
+                        data-test-id={windowMobile ? `burger-${category.path}` : `navigation-${category.path}`}
                       >
-                        {category.name} <span>{category.amount}</span>
+                        {category.name}
                       </NavLink>
+                      <span
+                        data-test-id={
+                          windowMobile
+                            ? `burger-book-count-for-${category.path}`
+                            : `navigation-book-count-for-${category.path}`
+                        }
+                      >
+                        {amountOfBooks(category.name)}
+                      </span>
                     </li>
                   ))}
               </ul>
