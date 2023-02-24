@@ -1,19 +1,22 @@
-import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { MenuContext } from '../../store/menu-context';
-import { ReactComponent as MenuIcon } from '../../assets/images/Icon_Menu.svg';
 
-import LogoPNG from '../../assets/images/logo.png';
 import Avatar from '../../assets/images/avatar.png';
+import { ReactComponent as MenuIcon } from '../../assets/images/Icon_Menu.svg';
+import LogoPNG from '../../assets/images/logo.png';
+import { RootState } from '../../redux';
+import { SET_BURGER_OPEN } from '../../redux/reducers/app-state/actions';
 
 import './layout.scss';
 
 export const Header = () => {
-  const sidebar = useContext(MenuContext);
+  const dispatch = useDispatch();
+  const isBurgerOpen = useSelector((state: RootState) => state.appState.isBurgerOpen);
 
   const sidebarHandler = () => {
-    sidebar.setOpen();
+    dispatch({ type: SET_BURGER_OPEN });
   };
+
   return (
     <header>
       <Link to='/books/all'>
@@ -24,7 +27,7 @@ export const Header = () => {
         type='button'
         data-test-id='button-burger'
         onClick={sidebarHandler}
-        className={sidebar.isOpen ? 'menu-btn open' : 'menu-btn'}
+        className={isBurgerOpen ? 'menu-btn open' : 'menu-btn'}
       >
         <span className='first-line' />
         <span className='second-line' />

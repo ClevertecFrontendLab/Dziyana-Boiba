@@ -1,4 +1,7 @@
+import { useSelector } from 'react-redux';
+
 import { ReactComponent as CatIcon } from '../../../assets/images/Icon_Cat.svg';
+import { RootState } from '../../../redux';
 import { Button } from '../../molecules/button/button';
 import { RatingBar } from '../../molecules/rating/rating-bar';
 
@@ -44,12 +47,25 @@ type Props = {
 };
 
 export const BookCard = ({ book, isListView, onClick }: Props) => {
+  const search = useSelector((state: RootState) => state.appState.search);
   const date = book.delivery?.dateHandedTo?.substring(5, 10).replace('-', '.');
 
-  const handleKeyDown = (e: any, id: number) => {
-    if (e.keyCode === 13) {
+  const handleKeyDown = (e: React.KeyboardEvent, id: number) => {
+    if (e.key === 'Enter') {
       onClick(id);
     }
+  };
+
+  const replace = (title: string) => {
+    const splitedTitle = title.split(new RegExp(`(${search})`, 'gi'));
+
+    return (
+      <p>
+        {splitedTitle.map((item) =>
+          item.toLowerCase() === search.toLowerCase() ? <span data-test-id='highlight-matches'>{item}</span> : item
+        )}
+      </p>
+    );
   };
 
   return (
@@ -71,7 +87,7 @@ export const BookCard = ({ book, isListView, onClick }: Props) => {
       <div className='card-container_content'>
         {!isListView && <RatingBar rating={book.rating} />}
         <div className='title-overflow-container'>
-          <p>{book.title}</p>
+          <p>{search ? replace(book.title) : book.title}</p>
         </div>
         <div className='author-overflow-container'>
           <p>
@@ -84,7 +100,7 @@ export const BookCard = ({ book, isListView, onClick }: Props) => {
 
           <Button
             className={!book.delivery && book.booking ? 'booked' : ''}
-            disabled={book.delivery === null ? false : true}
+            disabled={book.delivery || book.booking ? true : false}
           >
             {book.delivery && book.booking && `занята до ${date}`}
             {!book.delivery && book.booking && 'Забронирована'}

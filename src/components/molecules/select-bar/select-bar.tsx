@@ -7,18 +7,19 @@ import { ReactComponent as RatingIcon } from '../../../assets/images/Icon_rating
 import { ReactComponent as SearchIcon } from '../../../assets/images/Icon_Search.svg';
 import { ReactComponent as TableIcon } from '../../../assets/images/Icon_table.svg';
 import { RootState } from '../../../redux';
-import { SET_FILTER } from '../../../redux/reducers/app-state/actions';
+import { SET_FILTER, SET_SEARCH } from '../../../redux/reducers/app-state/actions';
 
 import './select-bar.scss';
 
 type Props = {
-  selectView: any;
+  selectView: (value: string) => void;
   isListView: boolean;
 };
 
 export const SelectBar = ({ selectView, isListView }: Props) => {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const dispatch = useDispatch();
+
   const filter = useSelector((state: RootState) => state.appState.ratingDown);
   const openInputHandler = () => {
     setIsInputOpen(true);
@@ -31,15 +32,26 @@ export const SelectBar = ({ selectView, isListView }: Props) => {
     dispatch({ type: SET_FILTER });
   };
 
+  const setSearchHandler = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    dispatch({ type: SET_SEARCH, payload: target.value.trim() });
+  };
+
   return (
     <div className='select-bar'>
       <div className='select-bar_left'>
         <div className={isInputOpen ? 'input-container open' : 'input-container'}>
           <SearchIcon className='search-icon' onClick={openInputHandler} data-test-id='button-search-open' />
-          <input type='text' data-test-id='input-search' placeholder='Поиск книги или автора…' />
+          <input
+            type='text'
+            data-test-id='input-search'
+            onChange={(e) => setSearchHandler(e)}
+            placeholder='Поиск книги или автора…'
+          />
           <CloseIcon className='close-icon' onClick={closeInputHandler} data-test-id='button-search-close' />
         </div>
-        <button type='button' onClick={setFilterHandler} className='rating-btn'>
+        <button type='button' onClick={setFilterHandler} className='rating-btn' data-test-id='sort-rating-button'>
           <RatingIcon className={filter ? '' : 'rating-up'} />
           <span>По рейтингу</span>
         </button>

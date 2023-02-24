@@ -1,30 +1,32 @@
-import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
 import { Menu } from '../../components/organisms/menu';
-import { MenuContext } from '../../store/menu-context';
+import { RootState } from '../../redux';
+import { SET_BURGER_OPEN } from '../../redux/reducers/app-state/actions';
 
 import './sidebar-layout.scss';
 
 export const SidebarLayout = () => {
-  const sidebar = useContext(MenuContext);
+  const dispatch = useDispatch();
+  const isBurgerOpen = useSelector((state: RootState) => state.appState.isBurgerOpen);
   const closeMenuHandler = () => {
-    sidebar.setOpen();
+    dispatch({ type: SET_BURGER_OPEN });
   };
 
-  const handleKeyDown = (e: any) => {
-    if (e.keyCode === 13) {
-      sidebar.setOpen();
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      dispatch({ type: SET_BURGER_OPEN });
     }
   };
 
   return (
     <section className='sidebar-layout'>
-      {sidebar.isOpen && (
+      {isBurgerOpen && (
         <div
           className='backdrop'
           onClick={closeMenuHandler}
-          onKeyDown={(e) => handleKeyDown(e)}
+          onKeyDown={handleKeyDown}
           role='button'
           aria-label='close'
           tabIndex={0}

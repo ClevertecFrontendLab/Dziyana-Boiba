@@ -9,7 +9,7 @@ import { AppDispatch, RootState } from '../../redux';
 import { LOAD_BOOKS_LIST } from '../../redux/reducers/books-list/actions';
 
 export const MainPage = () => {
-  const [isListView, setIsListView] = useState(false);
+  const [isListView, setIsListView] = useState<boolean>(false);
 
   const dispatch: AppDispatch = useDispatch();
   const booksList = useSelector((state: RootState) => state.books);

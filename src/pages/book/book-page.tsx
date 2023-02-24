@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 
 import { ReactComponent as IconChevronDown } from '../../assets/images/Icon_Chevron_Down.svg';
 import { ReactComponent as SlashIcon } from '../../assets/images/Icon_Slash.svg';
@@ -107,8 +107,10 @@ export const BookPage = () => {
     <section className='book-page'>
       <div className='book-page_link_wrapper'>
         <div className='book-page_link'>
-          {currentCategory ? currentCategory : 'Все книги'} <SlashIcon className='book-page_link_slash' />{' '}
-          {bookData?.title}
+          <NavLink to={`/books/${category}`} data-test-id='breadcrumbs-link'>
+            {currentCategory ? currentCategory : 'Все книги'}
+          </NavLink>{' '}
+          <SlashIcon className='book-page_link_slash' /> <span data-test-id='book-name'>{bookData?.title}</span>
         </div>
       </div>
       {bookDetails.error ? (
@@ -120,7 +122,9 @@ export const BookPage = () => {
               <BookSwiper images={bookData?.images} />
             </div>
             <div className='book-description'>
-              <div className='book-title'>{bookData?.title}</div>
+              <div className='book-title' data-test-id='book-title'>
+                {bookData?.title}
+              </div>
               <div className='book-author'>
                 {bookData?.authors && bookData?.authors.map((author: string) => `${author}, `)}
                 {bookData?.issueYear}
